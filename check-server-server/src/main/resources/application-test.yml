@@ -1,0 +1,90 @@
+spring:
+    datasource:
+        initialize: false
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        druid:
+            first:
+               url: jdbc:mysql://103.63.2.190:3306/newfaceshow?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+               username: root
+               password: '!Gch@o888mysql'
+            second:
+               url: jdbc:mysql://103.63.2.190:3306/newfaceshow?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+               username: root
+               password: '!Gch@o888mysql'
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: true
+                url-pattern: /druid/*
+                #login-username: admin
+                #login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+    redis:
+        open: true  # 是否开启redis缓存  true开启   false关闭
+        database: 0
+        host: 45.122.138.39
+        port: 7002
+        password:       # 密码（默认为空）
+        timeout: 6000  # 连接超时时长（毫秒）
+        pool:
+            max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+            max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+            max-idle: 10      # 连接池中的最大空闲连接
+            min-idle: 5       # 连接池中的最小空闲连接
+    dubbo:
+        protocol:
+            port: 20880 # 通信端口；在同一台机器上，这个端口号不能与其他服务提供者的端口号有重复的；你也可以不配置，dubbo会默认给你分配；
+            name: rmi #协议
+        application: cast-admin-server #sea-center-service-user # dubbo应用名称
+        registry:
+            address: zookeeper://45.122.138.144:2192 # zookeeper注册中心地址
+            timeout: 30000 # 接口调用超时时间，默认50000
+            check: false # 项目启动时，检查注册中心是否可用（是否启动了zookeeper注册中心）
+            file: /data/dubbofile/dubbo-registry.properties  # 解决启动时报Can not lock the registry cache file的错误
+        provider:
+            retries: 0 # 重试次数，0表示不重试
+        service:
+            group: cast1
+    fastdfs:
+        tracker_servers: 43.249.223.101:22122
+        connect_timeout_in_seconds: 30
+        network_timeout_in_seconds: 60
+        charset: UTF-8
+        init_conn_on_load: true
+        # http_anti_steal_token:
+        # http_secret_key:
+        # http_tracker_http_port:
+    jackson:
+        time-zone: GMT+8
+app:
+    tim:
+        api:
+            sdk-appid: 1400088004
+            identifier: admin
+            content-type: json
+# 密码盐
+passwordSalt: f1ab3ada19474b31449127a254f4a0bda8a5fd3461a84e7acc02f041f1be6fcd
+
+#rocketmq配置
+rocketmq:
+  producer:
+    namesrvAddr: 45.122.138.146:9876
+    sendMsgTimeout: 100

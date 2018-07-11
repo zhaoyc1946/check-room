@@ -1,0 +1,43 @@
+
+ # ========================================= 【dubbo配置】 ==========================================================
+  # 【遇到的坑】：
+  #     ◆ 当我在当前模块的pom.xml中配置的 spring-boot-starter-dubbo 依赖版本高于 1.0.7 的时候，当启动项目的时候，总是报错，信息如下：
+  #           java.lang.IllegalStateException: No such application config! Please add <dubbo:application name="..." /> to your spring config.
+  #     ◆ 我尝试了很多方法（下面2种方式可以解决上面的异常问题）：
+  #           1、在classpath下新建 dubbo.properties 文件，在里面配置了  dubbo.application.name、dubbo.registry.address、dubbo.consumer.timeout、dubbo.consumer.check等主要配置，这种方式可以解决上面的异常，原因是因为dubbo会默认加载classpath下的dubbo.properties
+  #           2、在 pers\zb\center\app\queue\config\application\ApplicationConfig.java 类加上@PropertySource(value = {"classpath:/properties/dubbo.properties"}) 这个注解配置，指定dubbo的配置文件路径，这样也是可以的
+  #     ◆ 虽然上面2种方式可以解决问题，但是总觉得不太简洁、方便，还得要配置dubbo.properties和相关java类注解；既然其他的模块可以使用 yml 直接配置dubbo，为何在这个模块就不行？
+  #        之后更换了spring-boot-starter-dubbo 依赖的版本号，也就是现在的 1.0.7 ，再次启动项目，之前的异常已经不复存在了；
+  # 【结论与建议】：
+  #     ☆ 经过查看，当 spring-boot-starter-dubbo 这个依赖的版本高于 1.0.7 的时候，它所依赖的 dubbo 的版本号为 2.5.8，而当前版本号是 1.0.7 的时候，所依赖的dubbo的版本号为 2.5.6
+  #     ☆ 可以看出，使用dubbo的不同版本，可能会带来不同的问题；所以，当出现问题且始终找不出原因的时候，尤其是springbbot集成方面的环境，可以更换版本号尝试一下；
+
+spring:
+    dubbo:
+        protocol:
+            port: 20881 # 通信端口；在同一台机器上，这个端口号不能与其他服务提供者的端口号有重复的；你也可以不配置，dubbo会默认给你分配；
+            name: rmi #协议
+        application:
+            name: check-server-web  # dubbo应用名称
+        registry:
+            address: zookeeper://127.0.0.1:2181 # zookeeper注册中心地址
+            timeout: 30000 # 接口调用超时时间，默认50000
+            check: false # 项目启动时，检查注册中心是否可用（是否启动了zookeeper注册中心）
+        provider:  # 重试次数，0表示不重试
+            retries: 0
+        service:
+            group: cast1
+    redis:
+        open: false  # 是否开启redis缓存  true开启   false关闭
+        database: 0
+        host: 127.0.0.1
+        port: 6379
+        password:       # 密码（默认为空）
+        timeout: 6000  # 连接超时时长（毫秒）
+        pool:
+            max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+            max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+            max-idle: 10      # 连接池中的最大空闲连接
+            min-idle: 5       # 连接池中的最小空闲连接
+    jackson:
+        time-zone: GMT+8

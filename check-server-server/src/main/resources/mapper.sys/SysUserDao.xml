@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.check.server.modules.sys.dao.ISysUserDao" >
+
+  <resultMap id="BaseResultMap" type="com.check.server.modules.sys.vo.SysUserRowDataVo" >
+    <id column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    user_id, user_name, salt, password, email, phone, status, create_time
+  </sql>
+
+  <!-- 根据id查询数据-->
+  <select id="findRowDataVOById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from sys_user where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
+    <!-- 保存用户数据-->
+  <insert id="save" parameterType="com.check.server.modules.sys.bean.SysUserEntity" useGeneratedKeys="true" keyProperty="userId">
+    insert into sys_user
+    	(
+	        user_id,
+	        user_name,
+	        salt,
+	        password,
+	        email,
+	        phone,
+	        status,
+	        create_time
+        )
+        values
+        (
+	        #{userId,jdbcType=INTEGER},
+	        #{userName,jdbcType=VARCHAR},
+	        #{salt,jdbcType=VARCHAR},
+	        #{password,jdbcType=VARCHAR},
+	        #{email,jdbcType=VARCHAR},
+	        #{phone,jdbcType=VARCHAR},
+	        #{status,jdbcType=TINYINT},
+	        #{createTime,jdbcType=TIMESTAMP}
+        )
+  </insert>
+
+    <!-- 查询用户的所有权限 -->
+    <select id="getAllPermsListByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        SELECT
+            m.perms
+        FROM
+            sys_user_role ur
+        LEFT JOIN sys_role_menu rm ON ur.role_id = rm.role_id
+        LEFT JOIN sys_menu m ON rm.menu_id = m.menu_id
+        WHERE
+            ur.user_id = #{userId}
+    </select>
+  
+</mapper>

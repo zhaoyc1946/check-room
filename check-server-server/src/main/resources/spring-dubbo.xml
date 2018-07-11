@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+
+	<!--appliction-dev.yml里面-->
+<!--
+	&lt;!&ndash; 提供方应用信息，用于计算依赖关系 &ndash;&gt;
+	<dubbo:application name="cast-admin-server" />
+
+ 	<dubbo:registry protocol="zookeeper" address="127.0.0.1:2182"/>
+
+	<dubbo:protocol name="dubbo" port="20881" />-->
+
+	<!--统计服务的调用次调和调用时间的监控中心 -->
+	<!-- <dubbo:monitor protocol="registry"/> -->
+
+	<!--Dubbo 注册的服务项实现的映射-->
+	<dubbo:service interface="com.check.server.modules.sys.service.IShiroService" ref="shiroServiceImpl"/>
+	<dubbo:service interface="com.check.server.modules.sys.service.ISysLogService" ref="sysLogServiceImpl"/>
+	<dubbo:service interface="com.check.server.modules.sys.service.ISysUserService" ref="sysUserServiceImpl"/>
+	<dubbo:service interface="com.check.server.modules.sys.service.ITbTokenService" ref="tbTokenServiceImpl"/>
+
+</beans>
