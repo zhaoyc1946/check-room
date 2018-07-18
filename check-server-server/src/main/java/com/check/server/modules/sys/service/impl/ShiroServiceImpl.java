@@ -35,47 +35,10 @@ public class ShiroServiceImpl implements IShiroService {
     private RedisUtils redisUtils;
 
     @Autowired
-    private ITbTokenDao tbTokenDao;
-
-    @Autowired
     private ISysUserDao sysUserDao;
 
     @Autowired
     private ISysMenuDao sysMenuDao;
-
-    /**
-     * 根据token值获取token详细信息
-     *
-     * @param token token值
-     * @return
-     */
-    @Override
-    public TbTokenEntity getTbTokenByToken(String token) {
-        // 从redis中获取token详情
-        try {
-            String s = redisUtils.hget(RedisKeys.SysKeys.TB_TOKEN, token);
-            if (StringUtils.isNotBlank(s)) {
-                return JsonUtils.jsonToPojo(s, TbTokenEntity.class);
-            }
-        } catch (Exception e) {
-            logger.error("get token by redis exception, message: ", e);
-        }
-
-        // 从数据库中获取token信息
-        TbTokenEntity tbToken = tbTokenDao.getTbTokenByToken(token);
-
-        if (token == null) {
-            return null;
-        }
-
-        // 将token放入redis中
-        try {
-            redisUtils.hset(RedisKeys.SysKeys.TB_TOKEN, token, JsonUtils.objectToJson(tbToken));
-        } catch (Exception e) {
-            logger.error("save tb_token to redis exception, message: ", e);
-        }
-        return tbToken;
-    }
 
     /**
      * 根据用户id查询用户详情

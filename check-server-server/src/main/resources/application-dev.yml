@@ -66,3 +66,9 @@ spring:
         base-package: com.check.server.modules
     jackson:
         time-zone: GMT+8
+
+#rocketmq配置
+rocketmq:
+  producer:
+    namesrvAddr: 127.0.0.1:9876
+    sendMsgTimeout: 100

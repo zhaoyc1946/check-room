@@ -3,6 +3,7 @@ package com.check.server.oauth2;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.check.server.modules.sys.bean.TbTokenEntity;
 import com.check.server.modules.sys.service.IShiroService;
+import com.check.server.modules.sys.service.ITbTokenService;
 import com.check.server.modules.sys.vo.SysUserRowDataVo;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -23,6 +24,9 @@ public class OAuth2Realm extends AuthorizingRealm {
 
     @Reference
     private IShiroService shiroService;
+
+    @Reference
+    private ITbTokenService tbTokenService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -51,17 +55,17 @@ public class OAuth2Realm extends AuthorizingRealm {
         String accessToken = (String) token.getPrincipal();
 
         //根据accessToken，查询用户信息
-        TbTokenEntity tbToken = shiroService.getTbTokenByToken(accessToken);
+        TbTokenEntity tbToken = tbTokenService.getTbTokenByToken(accessToken);
         //token失效
         if(tbToken == null || tbToken.getExpireTime().getTime() < System.currentTimeMillis()){
-            throw new IncorrectCredentialsException("token失效，请重新登录");
+            throw new IncorrectCredentialsException("Token is invalid, please log in again");
         }
 
         //查询用户信息
         SysUserRowDataVo user = shiroService.getUserByUserId(tbToken.getUserId());
         //账号锁定
         if(user.getStatus() == 0){
-            throw new LockedAccountException("账号已被锁定,请联系管理员");
+            throw new LockedAccountException("Account is locked, please contact administrator");
         }
 
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, accessToken, getName());

@@ -25,6 +25,14 @@
             <artifactId>spring-boot-starter-dubbo</artifactId>
             <version>${spring.boot.dubbo.version}</version>
         </dependency>
+
+        <!-- MQ-->
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
     </dependencies>
 
 

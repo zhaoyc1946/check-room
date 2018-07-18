@@ -13,14 +13,6 @@ import java.util.Set;
 public interface IShiroService {
 
     /**
-     * 根据token值获取token详细信息
-     *
-     * @param token token值
-     * @return
-     */
-    TbTokenEntity getTbTokenByToken(String token);
-
-    /**
      * 根据用户id查询用户详情
      *
      * @param userId 用户id
